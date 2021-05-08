@@ -35,26 +35,7 @@ class CollapsingNavigationDrawerGuestState extends State<CollapsingNavigationDra
         ),
         HotBreadPage()));
 
-    itens.add(new ScreenHiddenDrawer(
-        new ItemHiddenMenu(
-          name: "Dining Resturant 1",
-          baseStyle: TextStyle( color: Colors.white.withOpacity(0.8), fontSize: 28.0 ),
-          colorLineSelected: Colors.orange,
-        ),
-        HotBreadPage()
-    )
-    );
 
-    itens.add(new ScreenHiddenDrawer(
-
-        new ItemHiddenMenu(
-          name: "Dining Resturant 2",
-          baseStyle: TextStyle( color: Colors.white.withOpacity(0.8), fontSize: 28.0 ),
-          colorLineSelected: Colors.pink,
-        ),
-        RegistrationPage()
-    )
-    );
     super.initState();
   }
 

@@ -28,13 +28,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
         backgroundColor: Colors.blueGrey,
         actions: [
           Padding(padding: const EdgeInsets.all(10),
             child: ElevatedButton(
               onPressed: (){
-                _showMyDialog();
+                Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationPage()));
               },
               child: const Text("Add to cart",style:TextStyle(color:Colors.white),),
             ),
@@ -153,8 +152,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               width: double.infinity,
               padding: EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 20),
               color: Color(0xFFFFFFFF),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text("Quantity",
                       textAlign: TextAlign.left,
@@ -167,39 +166,39 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                   Container(
                     decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey
-                      )
+                        border: Border.all(
+                            color: Colors.grey
+                        )
                     ),
                     child: Row(
                       children: [
                         IconButton(icon:Icon(Icons.remove,color: Colors.redAccent,),
                             onPressed:(){
-                          setState(() {
-                            if (counter!= 0){
-                              counter= counter -1;
-                              total = widget.price * counter;
-                              print('${counter}' + ' '+ '${total}');
-                            }
-                            else{
-                              total = 0;
-                            }
-                          });
+                              setState(() {
+                                if (counter!= 0){
+                                  counter= counter -1;
+                                  total = widget.price * counter;
+                                  print('${counter}' + ' '+ '${total}');
+                                }
+                                else{
+                                  total = 0;
+                                }
+                              });
 
-                        }),
+                            }),
                         Container(
                           decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey)
+                              border: Border.all(color: Colors.grey)
                           ),
                           child: Text('${counter}'),
                         ),
                         IconButton(icon:Icon(Icons.add,color: Colors.green,),
                             onPressed:(){
-                          setState(() {
-                            counter= counter +1;
-                            total = widget.price * counter;
-                            print('${counter}' + ' '+ '${total}');
-                          });
+                              setState(() {
+                                counter= counter +1;
+                                total = widget.price * counter;
+                                print('${counter}' + ' '+ '${total}');
+                              });
 
                             })
                       ],
@@ -236,33 +235,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       ),
     );
   }
-  Future<void> _showMyDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Alert!'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('You must be logged in to be able to purchase and use cart'),
 
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Dismiss'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
 
 }
 

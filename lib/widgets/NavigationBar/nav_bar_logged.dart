@@ -1,8 +1,9 @@
 import 'package:cos/Services/auth.dart';
 import 'package:cos/views/auth/login.dart';
 import 'package:cos/views/auth/register.dart';
-import 'package:cos/views/home/GuestPages/homeview.dart';
-import 'package:cos/views/home/GuestPages/hotbread.dart';
+import 'package:cos/views/home/UserPages/cart.dart';
+import 'package:cos/views/home/UserPages/homeviewLogged.dart';
+import 'package:cos/views/home/UserPages/hotbreadLogged.dart';
 import 'package:cos/widgets/NavigationBar/nav_bar_guest.dart';
 import 'package:flutter/material.dart';
 import 'package:hidden_drawer_menu/hidden_drawer_menu.dart';
@@ -39,26 +40,7 @@ class CollapsingNavigationDrawerUserState extends State<CollapsingNavigationDraw
         ),
         HotBreadPage()));
 
-    itens.add(new ScreenHiddenDrawer(
-        new ItemHiddenMenu(
-          name: "Dining Resturant 1",
-          baseStyle: TextStyle( color: Colors.white.withOpacity(0.8), fontSize: 28.0 ),
-          colorLineSelected: Colors.orange,
-        ),
-        HotBreadPage()
-    )
-    );
 
-    itens.add(new ScreenHiddenDrawer(
-
-        new ItemHiddenMenu(
-          name: "Dining Resturant 2",
-          baseStyle: TextStyle( color: Colors.white.withOpacity(0.8), fontSize: 28.0 ),
-          colorLineSelected: Colors.pink,
-        ),
-        RegistrationPage()
-    )
-    );
     super.initState();
   }
 
@@ -110,7 +92,7 @@ class CollapsingNavigationDrawerUserState extends State<CollapsingNavigationDraw
                 IconButton(
                   icon: Icon(Icons.shopping_cart,size: 30,),
                   onPressed: (){
-
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Cart()));
                   },
                 ),
 

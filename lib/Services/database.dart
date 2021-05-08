@@ -32,3 +32,4 @@ class FirebaseStorageService extends ChangeNotifier{
 //flutter run --web-renderer html
 //flutter run -d chrome --release
 //flutter run -d chrome --web-renderer html
+//flutter run -d chrome --release --web-renderer html

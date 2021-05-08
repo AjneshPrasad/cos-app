@@ -2,13 +2,14 @@ import 'dart:js';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cos/Services/database.dart';
 import 'package:cos/Services/loading.dart';
-import 'package:cos/views/product%20overview.dart';
+
 import 'package:cos/widgets/NavigationBar/nav_bar_guest.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../../productItem.dart';
+import 'desc.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -89,7 +90,10 @@ class _HomePageState extends State<HomePage> {
                                   child: InkWell(
                                       splashColor: Colors.grey,
                                       onTap: (){
-
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) =>ProductDetailScreen(
+                                          dishname:'${dish.docs[index].get('title')}',price: dish.docs[index].get('price'),
+                                          desc: '${dish.docs[index].get('desc')}',img: '${dish.docs[index].get('img')}',
+                                        )));
                                       },
                                       child: Column(
                                         children:[
@@ -141,7 +145,7 @@ class _HomePageState extends State<HomePage> {
     }
     else{
       return Container(
-        color: Colors.blueGrey,
+        color: Colors.white30,
         child: Center(
           child: SpinKitChasingDots(
             color: Colors.blueAccent,
