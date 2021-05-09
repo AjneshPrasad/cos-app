@@ -1,7 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cos/Services/auth.dart';
 import 'package:cos/Services/database.dart';
 import 'package:cos/views/auth/register.dart';
 import 'package:cos/widgets/NavigationBar/nav_bar_guest.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cos/Model/user.dart';
 import 'package:provider/provider.dart';
 
 
@@ -19,11 +23,26 @@ class ProductDetailScreen extends StatefulWidget {
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  QuerySnapshot items;
   double total=0;
   int counter= 0;
   FirebaseStorageService firebaseStorageService = new FirebaseStorageService();
+  DatabaseService databaseService = new DatabaseService();
+  final FirebaseAuth _auth= FirebaseAuth.instance;
 
+  @override
+  void initState() {
+    databaseService.getData('User Cart').then(
+            (results){
+          setState(() {
+            items = results;
 
+          });
+        }
+    );
+
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +52,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           Padding(padding: const EdgeInsets.all(10),
             child: ElevatedButton(
               onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationPage()));
+                //send order to database
+                Map orderitem = {
+                  'UserId':_auth.currentUser.uid,'item':widget.dishname,'quantity':counter,
+                  'subtotal':total,'unit price':widget.price,
+                };
+                databaseService.addToCart(orderitem);
+                // show confirmation and
+                _AddedDialog();
               },
               child: const Text("Add to cart",style:TextStyle(color:Colors.white),),
             ),
@@ -236,7 +262,33 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
+  Future<void> _AddedDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Success!'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Item is added to cart'),
 
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Dismiss'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
 
 

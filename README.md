@@ -1,16 +1,14 @@
 # cos
 
-A new Flutter project.
+This is a cafe ordering system made for the university of the south pacific in Cs415.
+this project is used for assessment purposes only and not for other use.
+the codebase for this is made with Flutter.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+in order for you to run this code, you must have flutter installed in your ide as well as the firebase modules.i have used intellij idea with both flutter and dart plugins installed.once you have those then run your code in ther terminal using the following command.
 
-A few resources to get you started if this is your first Flutter project:
+-flutter run -d chrome --release --web-renderer html
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+

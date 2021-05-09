@@ -59,22 +59,7 @@ class _HomePageState extends State<HomePage> {
                             fontSize: 32.0,
                           ),
                         ),
-                        Expanded(child: TextField(
-                          decoration: InputDecoration(
-                            contentPadding:EdgeInsets.symmetric(horizontal: 10.0) ,
-                            hintText: "Search...",
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20.0)
-                            ),
-                          ),
-                        )
-                        ),
-                        IconButton(
-                          onPressed: (){
 
-                          },
-                          icon:Icon(Icons.filter_list_rounded) ,
-                        )
                       ],
                     ),
                   ),

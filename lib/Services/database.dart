@@ -7,6 +7,36 @@ class DatabaseService{
   getData(String collection) async {
     return await FirebaseFirestore.instance.collection(collection).get();
   }
+  Future<void> addUser(credentials){
+    FirebaseFirestore.instance.collection('User').add(credentials).catchError((e){
+      print(e);
+    });
+  }
+  Future<void> Payrollregister(credentials){
+    FirebaseFirestore.instance.collection('Pending registration request').add(credentials).catchError((e){
+      print(e);
+    });
+  }
+  Future<void> addToCart(item){
+    FirebaseFirestore.instance.collection('User Cart').add(item).catchError((e){
+      print(e);
+    });
+  }
+  Future<void> checkout(item){
+    FirebaseFirestore.instance.collection('checkout order').add(item).catchError((e){
+      print(e);
+    });
+  }
+  Future<void> UpdateCart(Selected,newValues){
+    FirebaseFirestore.instance.collection('User Cart').doc(Selected).update(newValues).catchError((e){
+      print(e);
+    });
+  }
+  Future<void> DeleteCart(docId){
+    FirebaseFirestore.instance.collection('User Cart').doc(docId).delete().catchError((e){
+      print(e);
+    });
+  }
 }
 
 class FirebaseStorageService extends ChangeNotifier{
@@ -25,6 +55,7 @@ class FirebaseStorageService extends ChangeNotifier{
     });
     return img;
   }
+
 }
 
 

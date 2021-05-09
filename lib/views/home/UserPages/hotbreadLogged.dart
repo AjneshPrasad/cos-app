@@ -2,7 +2,7 @@ import 'dart:js';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cos/Services/database.dart';
 import 'package:cos/Services/loading.dart';
-import 'package:cos/views/home/GuestPages/desc.dart';
+import 'package:cos/views/home/UserPages/desc_logged.dart';
 import 'package:cos/widgets/NavigationBar/nav_bar_guest.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -58,22 +58,8 @@ class _HotBreadPageState extends State<HotBreadPage> {
                             fontSize: 32.0,
                           ),
                         ),
-                        Expanded(child: TextField(
-                          decoration: InputDecoration(
-                            contentPadding:EdgeInsets.symmetric(horizontal: 10.0) ,
-                            hintText: "Search...",
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20.0)
-                            ),
-                          ),
-                        )
-                        ),
-                        IconButton(
-                          onPressed: (){
 
-                          },
-                          icon:Icon(Icons.filter_list_rounded) ,
-                        )
+
                       ],
                     ),
                   ),

@@ -2,6 +2,7 @@ import 'package:cos/Services/loading.dart';
 import 'package:cos/views/auth/register.dart';
 import 'package:cos/widgets/NavigationBar/nav_bar_guest.dart';
 import 'package:cos/widgets/NavigationBar/nav_bar_logged.dart';
+import 'package:cos/views/home/UserPages/ResturantPage.dart';
 import 'package:flutter/material.dart';
 
 import 'dart:developer';
@@ -24,9 +25,12 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   bool loading =false;
   String email='';
+  String resturantemail='hotbread@gmail.com';
+  String resturantpass='12345678';
   String pass='';
   String error='';
   bool _obscureText = true;
+
 
   void _toggle() {
     setState(() {
@@ -123,12 +127,15 @@ class _LoginState extends State<Login> {
                         if(_formKey.currentState.validate()){
                           setState(() => loading= true);
                           dynamic result= await _auth.signIn(email, pass);
-                          if(result== null){
+                          if(email ==resturantemail && pass==resturantpass){
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => ResturantPage()));
+                          }
+                          else if(result== null ){
                             setState(()
-                                {
-                                  error ='Email or Password may be incorrect';
-                                  loading = false;
-                                });
+                            {
+                              error ='Email or Password may be incorrect';
+                              loading = false;
+                            });
                           }
                           else{
                             Navigator.push(context, MaterialPageRoute(builder: (context) => CollapsingNavigationDrawerUser()));

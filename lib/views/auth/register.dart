@@ -21,6 +21,7 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
+  DatabaseService databaseService = new DatabaseService();
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
 
@@ -191,7 +192,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   onPressed:()async{
                     if (_formKey.currentState.validate()){
                       setState(() => loading= true);
-                      dynamic result = await _auth.registerWithEmailAndPass(email, pass);
+                      dynamic result = await _auth.registerWithEmailAndPass(email,pass,firstName,surname,id,mobile);
                       if(result == null){
                         setState(()
                         {
@@ -201,9 +202,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       }
                       else{
                         _showMyDialog();
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
                       }
-
                     }
                   },
                   child: const Text("Register",style:TextStyle(color:Colors.white),),
