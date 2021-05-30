@@ -85,7 +85,7 @@ class _ResturantPageState extends State<ResturantPage> {
                         child: Row(
                           children: [
                             Text(
-                              "Hot Bread Kitchen",
+                              "Southern Cross",
                               style: TextStyle(
                                 //fontWeight:FontWeight.bold,
                                 fontSize: 32.0,
@@ -130,19 +130,17 @@ class _ResturantPageState extends State<ResturantPage> {
                                     child: ListView.builder(
                                       itemCount: items.docs.length,
                                       itemBuilder: (context,index){
-                                        if(orders.docs[index].get('userId')==items.docs[i].get('UserId') ){
-
                                           return Card(
                                               child: Row(
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children:[
-                                                  Text('${items.docs[index].get('UserId')}'),
+                                                  Text('${users.docs[index].get('First name')}'+" "+ '${users.docs[index].get('Surname')}'),
                                                   Text('${orders.docs[index].get('Date')}'),
                                                   Text('${orders.docs[index].get('Time')}'),
-                                                  Text('${items.docs[i].get('item')}'),
-                                                  Text('${items.docs[i].get('quantity')}'),
+                                                  Text('${items.docs[index].get('item')}'),
+                                                  Text('${items.docs[index].get('quantity')}'),
                                                   Text('${orders.docs[index].get('DeliveryLoc')}'),
-                                                  Text('\$${items.docs[i].get('subtotal')}'),
+                                                  Text('\$${items.docs[index].get('subtotal')}'),
                                                   Text('${orders.docs[index].get('payment method')}'),
                                                   IconButton(
                                                     icon: Icon(Icons.delete,size: 30,),
@@ -155,19 +153,6 @@ class _ResturantPageState extends State<ResturantPage> {
                                                 ],
                                               )
                                           );
-                                          i++;
-                                        }
-                                        else{
-                                          if(i>items.docs.length){
-                                            return null;
-                                          }
-                                          else{
-                                            i++;
-                                          }
-                                          return Container(
-
-                                          );
-                                        }
                                       },
                                     ),
                                   ),

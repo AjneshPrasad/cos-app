@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cos/Services/database.dart';
-import 'package:cos/views/auth/register.dart';
-import 'package:cos/views/home/UserPages/desc_logged.dart';
+import 'package:cos/views/home/UserPages/CheckoutPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:date_format/date_format.dart';
 import 'package:intl/intl.dart';
+
 
 class Cart extends StatefulWidget{
   @override
@@ -18,18 +18,19 @@ class _CartState extends State<Cart> {
   QuerySnapshot items;
   QuerySnapshot payroll;
   QuerySnapshot user;
+  QuerySnapshot dish;
   String img;
 
-
+  int Total= 0;
   int radioValue = 1;
   int radioPay = 1;
   String address;
+  String Custom='';
   DatabaseService databaseService = new DatabaseService();
   FirebaseStorageService firebaseStorageService = new FirebaseStorageService();
-  String _setTime, _setDate;
   String _hour, _minute, _time;
-  int Total= 0;
-  int count=0;
+
+  int counts=0;
   String payment;
   String payment2;
   String dateTime;
@@ -38,6 +39,7 @@ class _CartState extends State<Cart> {
   TextEditingController _dateController = TextEditingController();
   TextEditingController _timeController = TextEditingController();
   final FirebaseAuth _auth= FirebaseAuth.instance;
+
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
@@ -71,6 +73,13 @@ class _CartState extends State<Cart> {
   }
   @override
   void initState() {
+    databaseService.getData('Southern Cross').then(
+            (results){
+          setState(() {
+            dish = results;
+          });
+        }
+    );
     databaseService.getData('User Cart').then(
             (results){
           setState(() {
@@ -92,13 +101,14 @@ class _CartState extends State<Cart> {
           });
         }
     );
-
+    //calTotal();
     _dateController.text = DateFormat.yMd().format(DateTime.now());
 
     _timeController.text = formatDate(
         DateTime(2019, 08, 1, DateTime.now().hour, DateTime.now().minute),
         [hh, ':', nn, " ", am]).toString();
     super.initState();
+
   }
   @override
   Widget build(BuildContext context) {
@@ -115,12 +125,14 @@ class _CartState extends State<Cart> {
                   Padding(padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
                       onPressed: (){
+
                         checkEligibility();
-                        Map checkout = {
+                        Map check = {
                           'userId':_auth.currentUser.uid,'Date':_dateController.text,'Time':_timeController.text,
-                          'DeliveryLoc':address,'Total':Total,'payment method':payment,'TransNo':items.docs[6].id,
+                          'DeliveryLoc':address,'Total':Total,'payment method':payment,'TransNo':dish.docs[2].id,'Custom':Custom
                         };
-                        databaseService.checkout(checkout);
+                        databaseService.checkout(check);
+
                       },
                       child: const Text("Proceed to Checkout",style:TextStyle(color:Colors.white),),
                     ),
@@ -128,197 +140,231 @@ class _CartState extends State<Cart> {
                 ],
               ),
               body: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Row(
-                        children: [
-                          Text(
-                            "My Cart",
-                            style: TextStyle(
-                              //fontWeight:FontWeight.bold,
-                              fontSize: 32.0,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child:Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Row(
+                          children: [
+                            Text(
+                              "My Cart",
+                              style: TextStyle(
+                                //fontWeight:FontWeight.bold,
+                                fontSize: 32.0,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Dish name',style:TextStyle(fontWeight: FontWeight.bold)),
-                          Text('Unit Price',style:TextStyle(fontWeight: FontWeight.bold)),
-                          Text('Quantity',style:TextStyle(fontWeight: FontWeight.bold)),
-                          Text('Subtotal',style:TextStyle(fontWeight: FontWeight.bold)),
-                          Text('Delete',style:TextStyle(fontWeight: FontWeight.bold)),
+                      Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Dish name',style:TextStyle(fontWeight: FontWeight.bold)),
+                            Text('Unit Price',style:TextStyle(fontWeight: FontWeight.bold)),
+                            Text('Quantity',style:TextStyle(fontWeight: FontWeight.bold)),
+                            Text('Subtotal',style:TextStyle(fontWeight: FontWeight.bold)),
+                            Text('Delete',style:TextStyle(fontWeight: FontWeight.bold)),
 
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    SingleChildScrollView(
-                        child: Padding(
-                          padding: EdgeInsets.all(5.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.tealAccent.shade100,
-                                borderRadius: BorderRadius.circular(20.0)
-                            ),
+                      SingleChildScrollView(
+                          child: Padding(
+                            padding: EdgeInsets.all(5.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.tealAccent.shade100,
+                                  borderRadius: BorderRadius.circular(20.0)
+                              ),
 
-                            height:costr.maxHeight/2 ,
-                            width: costr.maxWidth,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: ListView.builder(
-                                    itemCount: items.docs.length,
-                                    itemBuilder: (context,index){
-                                      if(items.docs[index].get('UserId')==_auth.currentUser.uid){
-                                        count =items.docs[index].get('quantity') ;
-                                        int subtotal=items.docs[index].get('subtotal');
-                                        calTotal(index);
-                                        return Card(
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children:[
-                                                Text('${items.docs[index].get('item')}'),
-                                                Text('\$${items.docs[index].get('unit price')}'),
-                                                Row(
-                                                  children: [
-                                                    Container(
-                                                      decoration: BoxDecoration(
-                                                          border: Border.all(
-                                                              color: Colors.grey
-                                                          )
-                                                      ),
-                                                      child: Row(
-                                                        children: [
-                                                          IconButton(icon:Icon(Icons.remove,color: Colors.redAccent,),
-                                                              onPressed:(){
-                                                                setState(() {
-                                                                  if (count!= 0){
-                                                                    count= count -1;
-                                                                    subtotal = items.docs[index].get('unit price') * count;
-                                                                    print('${count}' + ' '+ '${subtotal}');
-                                                                    databaseService.UpdateCart(items.docs[index],
+                              height:costr.maxHeight/2 ,
+                              width: costr.maxWidth,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: ListView.builder(
+                                      itemCount: items.docs.length,
+                                      itemBuilder: (context,index){
+                                        Total=0;
+                                        if(items.docs[index].get('UserId')==_auth.currentUser.uid){
+                                          Total+=items.docs[index].get('subtotal');
+                                          counts =items.docs[index].get('quantity');
+                                          int subtotal=items.docs[index].get('subtotal');
+                                          return Card(
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children:[
+                                                  Text('${items.docs[index].get('item')}'),
+                                                  Text('\$${items.docs[index].get('unit price')}'),
+                                                  Row(
+                                                    children: [
+                                                      Container(
+                                                        decoration: BoxDecoration(
+                                                            border: Border.all(
+                                                                color: Colors.grey
+                                                            )
+                                                        ),
+                                                        child: Row(
+                                                          children: [
+                                                            IconButton(icon:Icon(Icons.remove,color: Colors.redAccent,),
+                                                                onPressed:(){
+                                                                  setState(() {
+                                                                    if (counts.toInt()!= 0){
+                                                                      counts = counts.toInt() -1;
+                                                                      subtotal = items.docs[index].get('unit price') * counts;
+                                                                      print('${counts}' + ' '+ '${subtotal}');
+                                                                      initState();
+                                                                      databaseService.UpdateCart(items.docs[index].id,
+                                                                          {
+                                                                            'quantity':counts,
+                                                                            'subtotal': subtotal
+                                                                          }).then((result){
+
+                                                                      }).catchError((e){
+                                                                        print(e);
+                                                                      });
+                                                                    }
+                                                                    else{
+                                                                      subtotal = 0;
+                                                                    }
+                                                                    initState();
+                                                                  });
+
+                                                                }),
+                                                            Container(
+                                                              decoration: BoxDecoration(
+                                                                  border: Border.all(color: Colors.grey)
+                                                              ),
+                                                              child: Text('${counts.toString()}'),
+                                                            ),
+                                                            IconButton(icon:Icon(Icons.add,color: Colors.green,),
+                                                                onPressed:(){
+                                                                  setState(() {
+                                                                    counts= counts.toInt() +1;
+                                                                    subtotal = items.docs[index].get('unit price') * counts;
+                                                                    print('${counts}' + ' '+ '${subtotal}');
+                                                                    initState();
+                                                                    databaseService.UpdateCart(items.docs[index].id,
                                                                         {
-                                                                          'quantity':count,
+                                                                          'quantity':counts,
                                                                           'subtotal': subtotal
                                                                         }).then((result){
 
                                                                     }).catchError((e){
                                                                       print(e);
                                                                     });
-                                                                  }
-                                                                  else{
-                                                                    subtotal = 0;
-                                                                  }
-                                                                });
-
-                                                              }),
-                                                          Container(
-                                                            decoration: BoxDecoration(
-                                                                border: Border.all(color: Colors.grey)
-                                                            ),
-                                                            child: Text('${count}'),
-                                                          ),
-                                                          IconButton(icon:Icon(Icons.add,color: Colors.green,),
-                                                              onPressed:(){
-                                                                setState(() {
-                                                                  count= count +1;
-                                                                  subtotal = items.docs[index].get('unit price') * count;
-                                                                  print('${count}' + ' '+ '${subtotal}');
-                                                                  databaseService.UpdateCart(items.docs[index],
-                                                                  {
-                                                                    'quantity':count,
-                                                                    'subtotal': subtotal
-                                                                  }).then((result){
-
-                                                                  }).catchError((e){
-                                                                    print(e);
+                                                                    initState();
                                                                   });
-                                                                });
 
-                                                              })
-                                                        ],
+                                                                })
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
 
-                                                  ],
-                                                ),
-                                                Text('\$${subtotal}'),
-                                                IconButton(
-                                                  icon: Icon(Icons.delete,size: 30,),
-                                                  onPressed: (){
-                                                    setState(() {
-                                                      databaseService.DeleteCart(items.docs[index].id);
-                                                    });
-                                                  },
-                                                ),
-                                              ],
-                                            )
-                                        );
-                                      }
-                                      else{
-                                        return Container(
+                                                    ],
+                                                  ),
+                                                  Text('\$${subtotal}'),
+                                                  IconButton(
+                                                    icon: Icon(Icons.delete,size: 30,),
+                                                    onPressed: (){
+                                                      setState(() {
+                                                        databaseService.DeleteCart(items.docs[index].id);
+                                                        initState();
+                                                      });
+                                                    },
+                                                  ),
+                                                ],
+                                              )
+                                          );
+                                        }
+                                        else{
+                                          return Container(
 
-                                        );
-                                      }
-                                    },
+                                          );
+                                        }
+                                      },
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
+                          )
+                      ),
+                      Row(
+                        children: [
+                          Text('Total:',textAlign:TextAlign.right,
+                              style:TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.redAccent)),
+                          Text('\$${Total}',textAlign:TextAlign.right,
+                              style:TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.redAccent))
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          SizedBox(
+                            height: 10,
                           ),
-                        )
-                    ),
-                    Row(
-                      children: [
-                        Text('Total:',textAlign:TextAlign.right,
-                            style:TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.redAccent)),
-                        Text('${Total}',textAlign:TextAlign.right,
-                            style:TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.redAccent))
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text('Order Instruction:',style:TextStyle(fontSize: 18),),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Row(
-                          children: [
-                            Radio(value: 1, groupValue: radioValue, onChanged: (T){
-                              setState(() {
-                                radioValue = T;
-                              });
-                            }),
-                            Text('Pickup'),
-                            Radio(value: 2, groupValue: radioValue, onChanged: (T){
-                              setState(() {
-                                radioValue = T;
-                              });
-                            }),
-                            Text('Delivery'),
-                          ],
-                        )
-                      ],
-                    ),
-                    Container(
-                      child:form(),
-                    ),
+                          Text('Custom meal order option:',style:TextStyle(fontSize: 18),),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          TextFormField(
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintText: 'Enter Custom Order',
+                                helperText: 'can range from ingredients to add or remove in a particular dish, whether you would like a certain condiment alongside your dish etc',
+                                labelText: 'Anything else you want to add or customise to your order?'
+                            ),
+                            maxLines: 3,
+                            onChanged: (val){
+                              setState(() =>Custom=val);
+                            },
+                          )
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Text('Order Instruction:',style:TextStyle(fontSize: 18),),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Row(
+                            children: [
+                              Radio(value: 1, groupValue: radioValue, onChanged: (T){
+                                setState(() {
+                                  radioValue = T;
+                                  //Total=0;
+                                });
+                              }),
+                              Text('Pickup'),
+                              Radio(value: 2, groupValue: radioValue, onChanged: (T){
+                                setState(() {
+                                  radioValue = T;
+                                  //Total=0;
+                                });
+                              }),
+                              Text('Delivery'),
+                            ],
+                          )
+                        ],
+                      ),
+                      Container(
+                        child:form(),
+                      ),
 
-                  ],
-                ),
+                    ],
+                  ) ,
+                )
               )
 
             );
@@ -393,15 +439,24 @@ class _CartState extends State<Cart> {
                    Radio(value: 1, groupValue: radioPay, onChanged: (T){
                      setState(() {
                        radioPay = T;
+                       payment='Payroll deduction';
                      });
                    }),
                    Text('Payroll deduction'),
                    Radio(value: 2, groupValue: radioPay, onChanged: (T){
                      setState(() {
                        radioPay = T;
+                       payment='Cash';
                      });
                    }),
                    Text('Cash'),
+                   Radio(value: 3, groupValue: radioPay, onChanged: (T){
+                     setState(() {
+                       radioPay = T;
+                       payment='Credit Card';
+                     });
+                   }),
+                   Text('Credit Card'),
                  ],
                )
                ,SizedBox(
@@ -416,10 +471,14 @@ class _CartState extends State<Cart> {
      );
     }
     else{
-      payment='Delivery';
       return Container(
+        //width:500,
+        //height:300 ,
         child: Column(
           children: [
+            SizedBox(
+              height: 10,
+            ),
             Row(
               children: [
                 Text('Time:'),
@@ -427,7 +486,10 @@ class _CartState extends State<Cart> {
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey)
                   ),
-                  child: Text(_timeController.text),
+                  child: Text('${_timeController.text}'),
+                ),
+                SizedBox(
+                  height: 10,
                 ),
                 ElevatedButton(
                     onPressed: (){
@@ -436,6 +498,9 @@ class _CartState extends State<Cart> {
                     child: Text('Choose'))
               ],
             ),
+            SizedBox(
+              height: 10,
+            ),
             Row(
               children: [
                 Text('Date:'),
@@ -443,7 +508,10 @@ class _CartState extends State<Cart> {
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey)
                   ),
-                  child: Text(_dateController.text),
+                  child: Text('${_dateController.text}'),
+                ),
+                SizedBox(
+                  height: 10,
                 ),
                 ElevatedButton(
                     onPressed: (){
@@ -451,38 +519,60 @@ class _CartState extends State<Cart> {
                     },
                     child: Text('Choose'))
               ],
+            ),SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                TextFormField(
+                  validator: (val)=>val.isEmpty ?'Please enter place to be delivered': null,
+                  decoration: const InputDecoration(
+                    labelStyle: TextStyle(color: Colors.black),
+                    border: UnderlineInputBorder(),
+                    filled: true,
+                    hintText: "Enter Delivery location",
+                    labelText: "Delivery Location:",
+                  ),
+                  onChanged: (val){
+                    setState(() =>address=val);
+                  },
+                ),
+              ],
             ),
             Column(
               children: [
+                SizedBox(
+                  height: 10,
+                ),
                 Text('Payment Option'),
                 Row(
                   children: [
                     Radio(value: 1, groupValue: radioPay, onChanged: (T){
-                      checkEligibility();
                       setState(() {
                         radioPay = T;
+                        payment='Payroll deduction';
                       });
                     }),
-                    Text('Payroll deduction')
-                  ],
-                ),
-                Row(
-                  children: [
-                    TextFormField(
-                      validator: (val)=>val.isEmpty ?'Please enter your email address': null,
-                      decoration: const InputDecoration(
-                        labelStyle: TextStyle(color: Colors.black),
-                        border: UnderlineInputBorder(),
-                        filled: true,
-                        hintText: "Enter Delivery location",
-                        labelText: "Delivery Location:",
-                      ),
-                      onChanged: (val){
-                        setState(() =>address=val);
-                      },
-                    ),
+                    Text('Payroll deduction'),
+                    Radio(value: 2, groupValue: radioPay, onChanged: (T){
+                      setState(() {
+                        radioPay = T;
+                        payment='Cash';
+                      });
+                    }),
+                    Text('Cash'),
+                    Radio(value: 3, groupValue: radioPay, onChanged: (T){
+                      setState(() {
+                        radioPay = T;
+                        payment='Credit Card';
+                      });
+                    }),
+                    Text('Credit Card'),
                   ],
                 )
+                ,SizedBox(
+                  height: 10,
+                ),
               ],
             )
           ],
@@ -492,24 +582,20 @@ class _CartState extends State<Cart> {
       );
     }
   }
-  Widget calTotal(int i){
-    build(context,index){
-      if (items.docs[i].get('UserId')==_auth.currentUser.uid){
-        Total+=items.docs[i].get('subtotal');
-      }
-      else{
-        Total=0;
-      }
-    }
 
+  Future<void> checkEligibility() async {
 
-  }
-  void checkEligibility() {
-    int i = 0;
     if(radioPay == 1){
-      payment2='Payroll deduct';
+      payment='Payroll deduction';
         _registerPayroll();
 
+    }
+    else if(radioPay == 3){
+      payment='Credit card';
+      redirectToCheckout(context);
+    }
+    else{
+      payment='Cash';
     }
   }
   Future<void> _registerPayroll() async {
@@ -523,7 +609,6 @@ class _CartState extends State<Cart> {
             child: ListBody(
               children: <Widget>[
                 Text('you are not registerd to the payroll deduction option,register Now?'),
-
               ],
             ),
           ),
@@ -536,6 +621,7 @@ class _CartState extends State<Cart> {
                     'empLname':user.docs[0].get('Surname'),'empEmail':user.docs[0].get('email'),'empPhone':user.docs[0].get('mobile'),
                   };
                   databaseService.Payrollregister(request);
+
                   Navigator.of(context).pop();
                 }
 

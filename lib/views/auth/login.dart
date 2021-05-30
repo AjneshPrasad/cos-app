@@ -25,7 +25,7 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   bool loading =false;
   String email='';
-  String resturantemail='hotbread@gmail.com';
+  String resturantemail='southerncross@gmail.com';
   String resturantpass='12345678';
   String pass='';
   String error='';

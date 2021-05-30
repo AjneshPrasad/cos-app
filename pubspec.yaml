@@ -35,6 +35,11 @@ dependencies:
   firebase_storage: ^8.0.5
   firebase_core: ^1.1.0
   date_format: ^2.0.2
+  stripe_payment: ^1.1.0
+  http: ^0.13.3
+  dio: ^4.0.0
+  webview_flutter: ^2.0.7
+  js: ^0.6.3
 
 dev_dependencies:
   flutter_test:
