@@ -192,8 +192,10 @@ class _CartState extends State<Cart> {
                                       itemBuilder: (context,index){
                                         Total=0;
                                         if(items.docs[index].get('UserId')==_auth.currentUser.uid){
-                                          Total+=items.docs[index].get('subtotal');
-                                          counts =items.docs[index].get('quantity');
+                                          setState(() {
+                                            Total+=items.docs[index].get('subtotal');
+                                            counts =items.docs[index].get('quantity');
+                                          });
                                           int subtotal=items.docs[index].get('subtotal');
                                           return Card(
                                               child: Row(

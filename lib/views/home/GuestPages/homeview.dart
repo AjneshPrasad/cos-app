@@ -19,6 +19,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool loading =false;
   QuerySnapshot dish;
+  QuerySnapshot breakfast;
   String img;
   DatabaseService databaseService = new DatabaseService();
   FirebaseStorageService firebaseStorageService = new FirebaseStorageService();
@@ -28,6 +29,13 @@ class _HomePageState extends State<HomePage> {
             (results){
           setState(() {
             dish = results;
+          });
+        }
+    );
+    databaseService.getData('Breakfast').then(
+            (results){
+          setState(() {
+            breakfast = results;
           });
         }
     );
@@ -45,7 +53,7 @@ class _HomePageState extends State<HomePage> {
           child: new Scaffold(
             appBar: new PreferredSize( preferredSize: Size.fromHeight(kToolbarHeight),
               child: new Container(
-                color: Colors.blueGrey,
+                color: Colors.cyan,
                 child: new SafeArea(
                   child: Column(
                     children: [
@@ -87,16 +95,16 @@ class _HomePageState extends State<HomePage> {
                                   Expanded(
                                     flex: 2,
                                     child: GridView.builder(
-                                        itemCount: dish.docs.length,
+                                        itemCount: breakfast.docs.length,
                                         itemBuilder: (context,index){
-                                          img=dish.docs[index].get('img');
+                                          img=breakfast.docs[index].get('img');
                                           return Card(
                                             child: InkWell(
                                                 splashColor: Colors.grey,
                                                 onTap: (){
                                                   Navigator.push(context, MaterialPageRoute(builder: (context) =>ProductDetailScreen(
-                                                    dishname:'${dish.docs[index].get('title')}',price: dish.docs[index].get('price'),
-                                                    desc: '${dish.docs[index].get('desc')}',img: '${dish.docs[index].get('img')}',
+                                                    dishname:'${breakfast.docs[index].get('title')}',price: breakfast.docs[index].get('price'),
+                                                    desc: '${breakfast.docs[index].get('desc')}',img: '${breakfast.docs[index].get('img')}',
                                                   )));
                                                 },
                                                 child: Column(
@@ -104,7 +112,7 @@ class _HomePageState extends State<HomePage> {
                                                     Container(
                                                       height: 200.0,
                                                       child: FutureBuilder(
-                                                        future: firebaseStorageService.getImage(context,'${dish.docs[index].get('img')}' ),
+                                                        future: firebaseStorageService.getImage(context,'${breakfast.docs[index].get('img')}' ),
                                                         builder: (context,snapshot){
                                                           if (snapshot.connectionState== ConnectionState.done){
                                                             return Container(
@@ -124,9 +132,9 @@ class _HomePageState extends State<HomePage> {
                                                         },
                                                       ),
                                                     ),
-                                                    Text('${dish.docs[index].get('title')}'),
+                                                    Text('${breakfast.docs[index].get('title')}'),
 
-                                                    Text('${dish.docs[index].get('price')}'),
+                                                    Text('\$${breakfast.docs[index].get('price')}'),
                                                   ],
 
                                                 )
@@ -228,7 +236,7 @@ class _HomePageState extends State<HomePage> {
                                                     ),
                                                     Text('${dish.docs[index].get('title')}'),
 
-                                                    Text('${dish.docs[index].get('price')}'),
+                                                    Text('\$${dish.docs[index].get('price')}'),
                                                   ],
 
                                                 )
@@ -330,7 +338,7 @@ class _HomePageState extends State<HomePage> {
                                                     ),
                                                     Text('${dish.docs[index].get('title')}'),
 
-                                                    Text('${dish.docs[index].get('price')}'),
+                                                    Text('\$${dish.docs[index].get('price')}'),
                                                   ],
 
                                                 )

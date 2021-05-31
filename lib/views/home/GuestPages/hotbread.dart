@@ -45,7 +45,7 @@ class _HotBreadPageState extends State<HotBreadPage> {
           child: new Scaffold(
             appBar: new PreferredSize( preferredSize: Size.fromHeight(kToolbarHeight),
               child: new Container(
-                color: Colors.blueGrey,
+                color: Colors.cyan,
                 child: new SafeArea(
                   child: Column(
                     children: [

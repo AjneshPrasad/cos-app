@@ -45,7 +45,7 @@ class _HotBreadPageState extends State<HotBreadPage> {
           child: new Scaffold(
             appBar: new PreferredSize( preferredSize: Size.fromHeight(kToolbarHeight),
               child: new Container(
-                color: Colors.blueGrey,
+                color: Colors.cyan,
                 child: new SafeArea(
                   child: Column(
                     children: [
@@ -126,7 +126,7 @@ class _HotBreadPageState extends State<HotBreadPage> {
                                                     ),
                                                     Text('${dish.docs[index].get('title')}'),
 
-                                                    Text('${dish.docs[index].get('price')}'),
+                                                    Text('\$${dish.docs[index].get('price')}'),
                                                   ],
 
                                                 )
@@ -228,7 +228,7 @@ class _HotBreadPageState extends State<HotBreadPage> {
                                                     ),
                                                     Text('${dish.docs[index].get('title')}'),
 
-                                                    Text('${dish.docs[index].get('price')}'),
+                                                    Text('\$${dish.docs[index].get('price')}'),
                                                   ],
 
                                                 )
@@ -330,7 +330,7 @@ class _HotBreadPageState extends State<HotBreadPage> {
                                                     ),
                                                     Text('${dish.docs[index].get('title')}'),
 
-                                                    Text('${dish.docs[index].get('price')}'),
+                                                    Text('\$${dish.docs[index].get('price')}'),
                                                   ],
 
                                                 )

@@ -5,6 +5,7 @@ import 'package:cos/views/home/UserPages/cart.dart';
 import 'package:cos/views/home/UserPages/homeviewLogged.dart';
 import 'package:cos/views/home/UserPages/hotbreadLogged.dart';
 import 'package:cos/widgets/NavigationBar/nav_bar_guest.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hidden_drawer_menu/hidden_drawer_menu.dart';
 
@@ -20,6 +21,7 @@ class CollapsingNavigationDrawerUserState extends State<CollapsingNavigationDraw
     with SingleTickerProviderStateMixin {
   List<ScreenHiddenDrawer> itens = [];
   final AuthService _auth = AuthService();
+  final FirebaseAuth _auth2= FirebaseAuth.instance;
 
 
   @override
