@@ -1,9 +1,10 @@
-import 'dart:js';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cos/Services/database.dart';
 import 'package:cos/Services/loading.dart';
 import 'package:cos/views/home/GuestPages/desc.dart';
 import 'package:cos/widgets/NavigationBar/nav_bar_guest.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -31,6 +32,7 @@ class _HotBreadPageState extends State<HotBreadPage> {
         });
       }
   );
+  Firebase.initializeApp();
   super.initState();
   }
 
@@ -75,7 +77,7 @@ class _HotBreadPageState extends State<HotBreadPage> {
                               child: Row(
                                   children: [
                                     Text("Hot Bread Breakfast menu", style: TextStyle(//fontWeight:FontWeight.bold,
-                                      fontSize: 32.0,
+                                      fontSize: 28.0,
                                     ),
                                     ),
                                   ]
@@ -86,8 +88,10 @@ class _HotBreadPageState extends State<HotBreadPage> {
                                 children: [
                                   Expanded(
                                     flex: 2,
-                                    child: GridView.builder(
-                                        itemCount: dish.docs.length,
+                                    child: dish?.docs==null
+                                        ?Center(child: CircularProgressIndicator()):
+                                    GridView.builder(
+                                        itemCount: dish?.docs?.length,
                                         itemBuilder: (context,index){
                                           img=dish.docs[index].get('img');
                                           return Card(
@@ -102,7 +106,7 @@ class _HotBreadPageState extends State<HotBreadPage> {
                                                 child: Column(
                                                   children:[
                                                     Container(
-                                                      height: 200.0,
+                                                      height: 250.0,
                                                       child: FutureBuilder(
                                                         future: firebaseStorageService.getImage(context,'${dish.docs[index].get('img')}' ),
                                                         builder: (context,snapshot){
@@ -141,7 +145,7 @@ class _HotBreadPageState extends State<HotBreadPage> {
 
                                           crossAxisCount: count,
 
-                                          childAspectRatio:1/1.8,
+                                          childAspectRatio:1,
 
                                         )
 
@@ -204,7 +208,7 @@ class _HotBreadPageState extends State<HotBreadPage> {
                                                 child: Column(
                                                   children:[
                                                     Container(
-                                                      height: 200.0,
+                                                      height: 250.0,
                                                       child: FutureBuilder(
                                                         future: firebaseStorageService.getImage(context,'${dish.docs[index].get('img')}' ),
                                                         builder: (context,snapshot){
@@ -243,7 +247,7 @@ class _HotBreadPageState extends State<HotBreadPage> {
 
                                           crossAxisCount: count,
 
-                                          childAspectRatio:1/1.8,
+                                          childAspectRatio:1,
 
                                         )
 
@@ -306,7 +310,7 @@ class _HotBreadPageState extends State<HotBreadPage> {
                                                 child: Column(
                                                   children:[
                                                     Container(
-                                                      height: 200.0,
+                                                      height: 250.0,
                                                       child: FutureBuilder(
                                                         future: firebaseStorageService.getImage(context,'${dish.docs[index].get('img')}' ),
                                                         builder: (context,snapshot){
@@ -345,7 +349,7 @@ class _HotBreadPageState extends State<HotBreadPage> {
 
                                           crossAxisCount: count,
 
-                                          childAspectRatio:1/1.8,
+                                          childAspectRatio:1,
 
                                         )
 

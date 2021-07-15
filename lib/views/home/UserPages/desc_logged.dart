@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final String dishname;
-  final double price;
+  final int price;
   final String img;
   final String desc;
 
@@ -24,7 +24,7 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   QuerySnapshot items;
-  double total=0;
+  int total=0;
   int counter= 0;
   FirebaseStorageService firebaseStorageService = new FirebaseStorageService();
   DatabaseService databaseService = new DatabaseService();
@@ -53,7 +53,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             child: ElevatedButton(
               onPressed: (){
                 //send order to database
-                Map orderitem = {
+                dynamic orderitem = {
                   'UserId':_auth.currentUser.uid,'item':widget.dishname,'quantity':counter,
                   'subtotal':total,'unit price':widget.price,
                 };

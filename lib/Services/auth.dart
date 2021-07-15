@@ -33,13 +33,13 @@ class AuthService{
   Future registerWithEmailAndPass(String email,String password,String firstName,surname,String id,String mobile,)async{
     try{
       UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      _auth.currentUser.sendEmailVerification();
       User user= result.user;
       Map credentials = {
         'First name':firstName,'Surname':surname,'email':email,
         'empId':id,'mobile':mobile,'pass':password,'userId':user.uid
       };
       databaseService.addUser(credentials);
-
       return _userFromFirebaseUser(user);
     }catch(e){
       print(e.toString());

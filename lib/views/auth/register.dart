@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'dart:html';
+
 
 import 'package:cos/Model/user.dart';
 import 'package:cos/Services/auth.dart';
@@ -68,155 +68,160 @@ class _RegistrationPageState extends State<RegistrationPage> {
       ),
       backgroundColor: Colors.blueGrey,
       body: Center(
-        child:Container(
-          width:500.0 ,
-          height:900.0 ,
-        color: Colors.white30,
-        padding: EdgeInsets.all(10.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              SizedBox(height: 20.0,),
-              Text('Sign Up',style:TextStyle(fontSize: 20.0),),
-              SizedBox(height: 10.0,),
-              TextFormField(
-                validator: (val)=>val.isEmpty ?'Please enter your first name': null,
-                decoration: const InputDecoration(
-                  labelStyle: TextStyle(color: Colors.black),
-                  border: UnderlineInputBorder(),
-                  filled: true,
-                  icon: Icon(Icons.person),
-                  hintText: "Enter First Name",
-                  labelText: "First Name:",
-                ),
-                onChanged: (val){
-                  setState(() =>firstName=val);
-                },
-              ),
-              SizedBox(height: 10.0,),
-              TextFormField(
-                validator: (val)=>val.isEmpty ?'Please enter your Surname': null,
-                decoration: const InputDecoration(
+        child:ListView(
+           children: [
+             Container(
+               width:500.0 ,
+               height:900.0 ,
+               color: Colors.white30,
+               padding: EdgeInsets.all(10.0),
+               child: Expanded(
+                 child:Form(
+                   key: _formKey,
+                   child: Column(
+                     children: [
+                       SizedBox(height: 20.0,),
+                       Text('Sign Up',style:TextStyle(fontSize: 20.0),),
+                       SizedBox(height: 10.0,),
+                       TextFormField(
+                         validator: (val)=>val.isEmpty ?'Please enter your first name': null,
+                         decoration: const InputDecoration(
+                           labelStyle: TextStyle(color: Colors.black),
+                           border: UnderlineInputBorder(),
+                           filled: true,
+                           icon: Icon(Icons.person),
+                           hintText: "Enter First Name",
+                           labelText: "First Name:",
+                         ),
+                         onChanged: (val){
+                           setState(() =>firstName=val);
+                         },
+                       ),
+                       SizedBox(height: 10.0,),
+                       TextFormField(
+                         validator: (val)=>val.isEmpty ?'Please enter your Surname': null,
+                         decoration: const InputDecoration(
 
-                  labelStyle: TextStyle(color: Colors.black),
-                  border: UnderlineInputBorder(),
-                  filled: true,
-                  icon: Icon(Icons.person),
-                  hintText: "Enter Surname",
-                  labelText: "Surname:",
-                ),
-                onChanged: (val){
-                  setState(() =>surname=val);
-                },
-              ),
-              SizedBox(height: 10.0,),
-              TextFormField(
-                maxLength: 9,
-                validator: (val)=>val.length<9 ?'Please enter 9-digit ID': null,
-                decoration: const InputDecoration(
-                  labelStyle: TextStyle(color: Colors.black),
-                  border: UnderlineInputBorder(),
-                  filled: true,
-                  icon: Icon(Icons.person),
-                  hintText: "Enter Employee ID",
-                  labelText: "ID:",
-                ),
-                onChanged: (val){
-                  setState(() =>id=val );
-                },
-              ),
-              SizedBox(height: 10.0,),
-              TextFormField(
-                maxLength: 7,
-                validator: (val)=>val.length<6 ?'Please enter 7 digit mobile no': null,
-                decoration: const InputDecoration(
-                  labelStyle: TextStyle(color: Colors.black),
-                  border: UnderlineInputBorder(),
-                  filled: true,
-                  icon: Icon(Icons.phone),
-                  hintText: "Enter Mobile no",
-                  labelText: "Mobile:",
-                ),
-                onChanged: (val){
-                  setState(() =>mobile=val);
-                },
-              ),
-              SizedBox(height: 10.0,),
-              TextFormField(
-                validator: (val)=>val.isEmpty ?'Please enter your email address': null,
-                decoration: const InputDecoration(
-                  labelStyle: TextStyle(color: Colors.black),
-                  border: UnderlineInputBorder(),
-                  filled: true,
-                  icon: Icon(Icons.email),
-                  hintText: "Enter Email Address",
-                  labelText: "Email:",
-                ),
-                onChanged: (val){
-                  setState(() =>email=val);
-                },
-              ),
-              SizedBox(height: 10.0,),
-              TextFormField(
-                obscureText: _obscureText,
-                maxLength: 9,
-                validator: (val)=>val.isEmpty ?'Please enter your Password': null,
-                decoration: InputDecoration(
-                  labelStyle: TextStyle(color: Colors.black),
-                  border: UnderlineInputBorder(),
-                  filled: true,
-                  icon: Icon(Icons.lock),
-                  hintText: "Password should be 6 characters or more",
-                  labelText: "Password:",
-                  suffixIcon:GestureDetector(
-                    onTap: (){
-                      setState(() {
-                        _obscureText=!_obscureText;
-                      });
-                    },
-                    child: Icon(_obscureText? Icons.visibility:Icons.visibility_off),
-                  ),
-                ),
-                onChanged: (val){
-                  setState(() =>pass=val);
-                },
-              ),
-              SizedBox(height: 10.0,),
-              Center(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.blueAccent, // background
-                    onPrimary: Colors.white, // foreground
-                  ),
-                  onPressed:()async{
-                    if (_formKey.currentState.validate()){
-                      setState(() => loading= true);
-                      dynamic result = await _auth.registerWithEmailAndPass(email,pass,firstName,surname,id,mobile);
-                      if(result == null){
-                        setState(()
-                        {
-                          error ='Please enter a valid email';
-                          loading = false;
-                        });
-                      }
-                      else{
-                        _showMyDialog();
-                      }
-                    }
-                  },
-                  child: const Text("Register",style:TextStyle(color:Colors.white),),
-                ),
-              ),
-              SizedBox(height: 10.0,),
-              Text(
-                error,
-                style: TextStyle(color: Colors.red,fontSize: 14.0),
-              )
-            ],
-          ),
+                           labelStyle: TextStyle(color: Colors.black),
+                           border: UnderlineInputBorder(),
+                           filled: true,
+                           icon: Icon(Icons.person),
+                           hintText: "Enter Surname",
+                           labelText: "Surname:",
+                         ),
+                         onChanged: (val){
+                           setState(() =>surname=val);
+                         },
+                       ),
+                       SizedBox(height: 10.0,),
+                       TextFormField(
+                         maxLength: 9,
+                         validator: (val)=>val.length<9 ?'Please enter 9-digit ID': null,
+                         decoration: const InputDecoration(
+                           labelStyle: TextStyle(color: Colors.black),
+                           border: UnderlineInputBorder(),
+                           filled: true,
+                           icon: Icon(Icons.person),
+                           hintText: "Enter Employee ID",
+                           labelText: "ID:",
+                         ),
+                         onChanged: (val){
+                           setState(() =>id=val );
+                         },
+                       ),
+                       SizedBox(height: 10.0,),
+                       TextFormField(
+                         maxLength: 7,
+                         validator: (val)=>val.length<6 ?'Please enter 7 digit mobile no': null,
+                         decoration: const InputDecoration(
+                           labelStyle: TextStyle(color: Colors.black),
+                           border: UnderlineInputBorder(),
+                           filled: true,
+                           icon: Icon(Icons.phone),
+                           hintText: "Enter Mobile no",
+                           labelText: "Mobile:",
+                         ),
+                         onChanged: (val){
+                           setState(() =>mobile=val);
+                         },
+                       ),
+                       SizedBox(height: 10.0,),
+                       TextFormField(
+                         validator: (val)=>val.isEmpty ?'Please enter your email address': null,
+                         decoration: const InputDecoration(
+                           labelStyle: TextStyle(color: Colors.black),
+                           border: UnderlineInputBorder(),
+                           filled: true,
+                           icon: Icon(Icons.email),
+                           hintText: "Enter Email Address",
+                           labelText: "Email:",
+                         ),
+                         onChanged: (val){
+                           setState(() =>email=val);
+                         },
+                       ),
+                       SizedBox(height: 10.0,),
+                       TextFormField(
+                         obscureText: _obscureText,
+                         maxLength: 9,
+                         validator: (val)=>val.isEmpty ?'Please enter your Password': null,
+                         decoration: InputDecoration(
+                           labelStyle: TextStyle(color: Colors.black),
+                           border: UnderlineInputBorder(),
+                           filled: true,
+                           icon: Icon(Icons.lock),
+                           hintText: "Password should be 6 characters or more",
+                           labelText: "Password:",
+                           suffixIcon:GestureDetector(
+                             onTap: (){
+                               setState(() {
+                                 _obscureText=!_obscureText;
+                               });
+                             },
+                             child: Icon(_obscureText? Icons.visibility:Icons.visibility_off),
+                           ),
+                         ),
+                         onChanged: (val){
+                           setState(() =>pass=val);
+                         },
+                       ),
+                       SizedBox(height: 10.0,),
+                       Center(
+                         child: ElevatedButton(
+                           style: ElevatedButton.styleFrom(
+                             primary: Colors.blueAccent, // background
+                             onPrimary: Colors.white, // foreground
+                           ),
+                           onPressed:()async{
+                             if (_formKey.currentState.validate()){
+                               setState(() => loading= true);
+                               dynamic result = await _auth.registerWithEmailAndPass(email,pass,firstName,surname,id,mobile);
+                               if(result == null){
+                                 setState(()
+                                 {
+                                   error ='Please enter a valid email';
+                                   loading = false;
+                                 });
+                               }
+                               else{
+                                 _showMyDialog();
+                               }
+                             }
+                           },
+                           child: const Text("Register",style:TextStyle(color:Colors.white),),
+                         ),
+                       ),
+                       SizedBox(height: 10.0,),
+                       Text(
+                         error,
+                         style: TextStyle(color: Colors.red,fontSize: 14.0),
+                       )
+                     ],
+                   ),
+                 ),),
+             ),
+           ],
         ),
-      ),
       )
     );
 
@@ -232,7 +237,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             child: ListBody(
               children: <Widget>[
                 Text('Registered Successfully'),
-                Text('Now Log in to continue')
+                Text('Please verify your email before logging in')
 
               ],
             ),

@@ -1,4 +1,4 @@
-import 'dart:js';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cos/Services/database.dart';
 import 'package:cos/Services/loading.dart';
@@ -75,7 +75,7 @@ class _HotBreadPageState extends State<HotBreadPage> {
                               child: Row(
                                   children: [
                                     Text("Hot Bread Breakfast menu", style: TextStyle(//fontWeight:FontWeight.bold,
-                                      fontSize: 32.0,
+                                      fontSize: 23.0,
                                     ),
                                     ),
                                   ]
@@ -86,8 +86,10 @@ class _HotBreadPageState extends State<HotBreadPage> {
                                 children: [
                                   Expanded(
                                     flex: 2,
-                                    child: GridView.builder(
-                                        itemCount: dish.docs.length,
+                                    child: dish?.docs==null
+                                        ?Center(child: CircularProgressIndicator()):
+                                    GridView.builder(
+                                        itemCount: dish?.docs?.length,
                                         itemBuilder: (context,index){
                                           img=dish.docs[index].get('img');
                                           return Card(
@@ -177,7 +179,7 @@ class _HotBreadPageState extends State<HotBreadPage> {
                               child: Row(
                                   children: [
                                     Text("Hot bread Lunch menu", style: TextStyle(//fontWeight:FontWeight.bold,
-                                      fontSize: 32.0,
+                                      fontSize: 23.0,
                                     ),
                                     ),
                                   ]
@@ -279,7 +281,7 @@ class _HotBreadPageState extends State<HotBreadPage> {
                               child: Row(
                                   children: [
                                     Text("Hot Bread Dinner menu", style: TextStyle(//fontWeight:FontWeight.bold,
-                                      fontSize: 32.0,
+                                      fontSize: 23.0,
                                     ),
                                     ),
                                   ]

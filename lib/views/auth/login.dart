@@ -1,12 +1,13 @@
 import 'package:cos/Services/loading.dart';
 import 'package:cos/views/auth/register.dart';
+import 'package:cos/views/home/UserPages/payroll.dart';
 import 'package:cos/widgets/NavigationBar/nav_bar_guest.dart';
 import 'package:cos/widgets/NavigationBar/nav_bar_logged.dart';
 import 'package:cos/views/home/UserPages/ResturantPage.dart';
 import 'package:flutter/material.dart';
 
 import 'dart:developer';
-import 'dart:html';
+
 
 import 'package:cos/Services/auth.dart';
 
@@ -26,6 +27,8 @@ class _LoginState extends State<Login> {
   bool loading =false;
   String email='';
   String resturantemail='southerncross@gmail.com';
+  String payrollemail='southerncross@gmail.com';
+  String payrollpass='payroll69';
   String resturantpass='12345678';
   String pass='';
   String error='';
@@ -130,6 +133,9 @@ class _LoginState extends State<Login> {
                           if(email ==resturantemail && pass==resturantpass){
                             Navigator.push(context, MaterialPageRoute(builder: (context) => ResturantPage()));
                           }
+                          else if(email ==payrollemail && pass==payrollpass){
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => payroll()));
+                          }
                           else if(result== null ){
                             setState(()
                             {
@@ -146,7 +152,7 @@ class _LoginState extends State<Login> {
                       child: const Text("Login",style:TextStyle(color:Colors.white),),
                     ),
                   ),
-                  SizedBox(height: 20.0,),
+                  SizedBox(height: 13.0,),
                   Text(
                     error,
                     style: TextStyle(color: Colors.red,fontSize: 14.0),

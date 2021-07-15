@@ -1,9 +1,10 @@
-import 'dart:js';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cos/Services/database.dart';
 import 'package:cos/Services/loading.dart';
 
 import 'package:cos/widgets/NavigationBar/nav_bar_guest.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -39,6 +40,7 @@ class _HomePageState extends State<HomePage> {
           });
         }
     );
+    Firebase.initializeApp();
     super.initState();
   }
 
@@ -83,7 +85,7 @@ class _HomePageState extends State<HomePage> {
                               child: Row(
                                   children: [
                                     Text("Southern Cross Breakfast menu", style: TextStyle(//fontWeight:FontWeight.bold,
-                                      fontSize: 32.0,
+                                      fontSize: 23.0,
                                     ),
                                     ),
                                   ]
@@ -94,10 +96,12 @@ class _HomePageState extends State<HomePage> {
                                 children: [
                                   Expanded(
                                     flex: 2,
-                                    child: GridView.builder(
-                                        itemCount: breakfast.docs.length,
+                                    child:breakfast?.docs==null
+                                        ?Center(child: CircularProgressIndicator()):
+                                      GridView.builder(
+                                        itemCount: breakfast?.docs?.length,
                                         itemBuilder: (context,index){
-                                          img=breakfast.docs[index].get('img');
+                                          //img=breakfast.docs[index].get('img');
                                           return Card(
                                             child: InkWell(
                                                 splashColor: Colors.grey,
@@ -110,14 +114,14 @@ class _HomePageState extends State<HomePage> {
                                                 child: Column(
                                                   children:[
                                                     Container(
-                                                      height: 200.0,
+                                                      height:250.0,
                                                       child: FutureBuilder(
-                                                        future: firebaseStorageService.getImage(context,'${breakfast.docs[index].get('img')}' ),
+                                                        future: firebaseStorageService.getImage(context,'${breakfast?.docs[index].get('img')}' ),
                                                         builder: (context,snapshot){
                                                           if (snapshot.connectionState== ConnectionState.done){
                                                             return Container(
-                                                              width: MediaQuery.of(context).size.width/1.2,
-                                                              height:MediaQuery.of(context).size.height/1.2 ,
+                                                              width: MediaQuery.of(context).size.width,
+                                                              height:MediaQuery.of(context).size.height ,
                                                               child: snapshot.data,
                                                             );
                                                           }
@@ -132,9 +136,13 @@ class _HomePageState extends State<HomePage> {
                                                         },
                                                       ),
                                                     ),
-                                                    Text('${breakfast.docs[index].get('title')}'),
+                                                    Text('${breakfast.docs[index].get('title')}', style: TextStyle(//fontWeight:FontWeight.bold,
+                                                      fontSize: 12.0,
+                                                    ),),
 
-                                                    Text('\$${breakfast.docs[index].get('price')}'),
+                                                    Text('\$${breakfast.docs[index].get('price')}', style: TextStyle(//fontWeight:FontWeight.bold,
+                                                      fontSize: 12.0,
+                                                    ),),
                                                   ],
 
                                                 )
@@ -149,7 +157,7 @@ class _HomePageState extends State<HomePage> {
 
                                           crossAxisCount: count,
 
-                                          childAspectRatio:1/1.8,
+                                          childAspectRatio:1,
 
                                         )
 
@@ -185,7 +193,7 @@ class _HomePageState extends State<HomePage> {
                               child: Row(
                                   children: [
                                     Text("Southern Cross Lunch menu", style: TextStyle(//fontWeight:FontWeight.bold,
-                                      fontSize: 32.0,
+                                      fontSize: 23.0,
                                     ),
                                     ),
                                   ]
@@ -212,7 +220,7 @@ class _HomePageState extends State<HomePage> {
                                                 child: Column(
                                                   children:[
                                                     Container(
-                                                      height: 200.0,
+                                                      height: 250.0,
                                                       child: FutureBuilder(
                                                         future: firebaseStorageService.getImage(context,'${dish.docs[index].get('img')}' ),
                                                         builder: (context,snapshot){
@@ -251,7 +259,7 @@ class _HomePageState extends State<HomePage> {
 
                                           crossAxisCount: count,
 
-                                          childAspectRatio:1/1.8,
+                                          childAspectRatio:1,
 
                                         )
 
@@ -287,7 +295,7 @@ class _HomePageState extends State<HomePage> {
                               child: Row(
                                   children: [
                                     Text("Southern Cross Dinner menu", style: TextStyle(//fontWeight:FontWeight.bold,
-                                      fontSize: 32.0,
+                                      fontSize: 23.0,
                                     ),
                                     ),
                                   ]
@@ -314,7 +322,7 @@ class _HomePageState extends State<HomePage> {
                                                 child: Column(
                                                   children:[
                                                     Container(
-                                                      height: 200.0,
+                                                      height: 250.0,
                                                       child: FutureBuilder(
                                                         future: firebaseStorageService.getImage(context,'${dish.docs[index].get('img')}' ),
                                                         builder: (context,snapshot){
@@ -353,7 +361,7 @@ class _HomePageState extends State<HomePage> {
 
                                           crossAxisCount: count,
 
-                                          childAspectRatio:1/1.8,
+                                          childAspectRatio:1,
 
                                         )
 

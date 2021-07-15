@@ -1,39 +1,59 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class DatabaseService{
 
   getData(String collection) async {
+    await Firebase.initializeApp();
     return await FirebaseFirestore.instance.collection(collection).get();
   }
-  Future<void> addUser(credentials){
+  Future<void> addUser(credentials) async {
+    await Firebase.initializeApp();
     FirebaseFirestore.instance.collection('User').add(credentials).catchError((e){
       print(e);
     });
   }
-  Future<void> Payrollregister(credentials){
+  Future<void> Payrollregister(credentials) async {
+    await Firebase.initializeApp();
     FirebaseFirestore.instance.collection('Pending registration request').add(credentials).catchError((e){
       print(e);
     });
   }
-  Future<void> addToCart(item){
+  Future<void> Payrollapproved(credentials) async {
+    await Firebase.initializeApp();
+    FirebaseFirestore.instance.collection('Payroll deduction users').add(credentials).catchError((e){
+      print(e);
+    });
+  }
+  Future<void> addToCart(item) async {
+    await Firebase.initializeApp();
     FirebaseFirestore.instance.collection('User Cart').add(item).catchError((e){
       print(e);
     });
   }
-  Future<void> checkout(item){
+  Future<void> checkout(item) async {
+    await Firebase.initializeApp();
     FirebaseFirestore.instance.collection('checkout order').add(item).catchError((e){
       print(e);
     });
   }
-  Future<void> UpdateCart(Selected,newValues){
+  Future<void> UpdateCart(Selected,newValues) async {
+    await Firebase.initializeApp();
     FirebaseFirestore.instance.collection('User Cart').doc(Selected).update(newValues).catchError((e){
       print(e);
     });
   }
-  Future<void> DeleteCart(docId){
+  Future<void> DeleteCart(docId) async {
+    await Firebase.initializeApp();
     FirebaseFirestore.instance.collection('User Cart').doc(docId).delete().catchError((e){
+      print(e);
+    });
+  }
+  Future<void> DeleteRequest(docId) async {
+    await Firebase.initializeApp();
+    FirebaseFirestore.instance.collection('Pending registration request').doc(docId).delete().catchError((e){
       print(e);
     });
   }
@@ -47,6 +67,7 @@ class FirebaseStorageService extends ChangeNotifier{
 
   Future<Widget> getImage(BuildContext context,String imgName) async{
     Image img;
+    await Firebase.initializeApp();
     await FirebaseStorageService.loadImage(context, imgName).then((value) {
       img= Image.network(
         value.toString(),
